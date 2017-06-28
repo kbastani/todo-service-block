@@ -1,10 +1,12 @@
-title: todo-core
+name: todo-core
 memory: 1024M
 instances: 1
 path: ./target/todo-core-0.0.1-SNAPSHOT.jar
 disk_quota: 1024M
-host: github-event-core
+host: todo-core
 services:
  - todo-mysql
  - todo-rabbit
  - todo-mongo
+ - discovery-service
+ - config-server

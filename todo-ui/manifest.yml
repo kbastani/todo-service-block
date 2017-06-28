@@ -1,0 +1,9 @@
+name: todo-ui
+memory: 512M
+instances: 1
+path: ./target/todo-ui-0.0.1-SNAPSHOT.jar
+disk_quota: 1024M
+host: todo-ui
+services:
+ - discovery-service
+ - config-server

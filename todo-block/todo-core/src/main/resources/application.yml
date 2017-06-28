@@ -53,7 +53,7 @@ spring:
     platform: org.hibernate.dialect.H2Dialect
   data:
     mongodb:
-      uri: ${vcap.services.todo-lambda-db.credentials.uri}
+      uri: ${vcap.services.todo-mongo.credentials.uri}
 amazon:
   aws:
     access-key-id: ${AMAZON_AWS_ACCESS_KEY_ID:replace}
@@ -66,7 +66,6 @@ eureka:
       instanceId: ${vcap.application.instance_id:${spring.application.title}:${spring.application.instance_id:${server.port}}}
     leaseRenewalIntervalInSeconds: 5
   client:
-    enabled: false
     region: default
     registryFetchIntervalSeconds: 5
     serviceUrl:
