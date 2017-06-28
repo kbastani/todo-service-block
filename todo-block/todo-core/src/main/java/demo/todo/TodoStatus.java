@@ -10,6 +10,6 @@ import demo.todo.event.TodoEvent;
  * @author kbastani
  */
 public enum TodoStatus {
-    CREATED,
+    ACTIVE,
     COMPLETED
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
@@ -40,7 +41,9 @@ public class TodoController {
 
     @RequestMapping(path = "/todos")
     public ResponseEntity getTodos() {
-        return new ResponseEntity<>(todoRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(todoRepository.findAll().stream()
+                .map(this::getTodoResource)
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @PostMapping(path = "/todos")
@@ -59,7 +62,7 @@ public class TodoController {
 
     @RequestMapping(path = "/todos/{id}")
     public ResponseEntity getTodo(@PathVariable Long id) {
-        return Optional.ofNullable(todoRepository.findById(id).get())
+        return Optional.ofNullable(todoRepository.findById(id).orElse(null))
                 .map(this::getTodoResource)
                 .map(e -> new ResponseEntity<>(e, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -103,7 +106,7 @@ public class TodoController {
                 .map(e -> new ResponseEntity<>(e, HttpStatus.OK))
                 .orElseThrow(() -> new RuntimeException("The todo could not be found"));
     }
-    
+
     /**
      * Creates a new {@link Todo} entity and persists the result to the repository.
      *
@@ -114,8 +117,7 @@ public class TodoController {
         Assert.notNull(todo, "Todo body must not be null");
 
         todo = todoService.updateTodo(todo);
-        todo = todoEventService.apply(new TodoEvent(TodoEventType.CREATED_EVENT, todo),
-                todoService).getEntity();
+        todo = todoEventService.apply(new TodoEvent(TodoEventType.CREATED_EVENT, todo), todoService).getEntity();
 
         return getTodoResource(todo);
     }
@@ -129,7 +131,15 @@ public class TodoController {
      */
     private Resource<Todo> updateTodoResource(Long id, Todo todo) {
         todo.setIdentity(id);
-        return getTodoResource(todoRepository.save(todo));
+        Todo updateTodo = todoService.getTodo(id);
+
+        if(updateTodo != null) {
+            updateTodo.setStatus(todo.getStatus());
+            updateTodo.setTitle(todo.getTitle());
+            return getTodoResource(todoService.updateTodo(updateTodo));
+        }
+
+        return null;
     }
 
     /**

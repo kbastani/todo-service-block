@@ -14,10 +14,10 @@ public class CreateTodo {
 
     public Todo apply(TodoEvent todoEvent) {
         log.info("New todo: " + todoEvent);
-        Assert.isTrue((todoEvent.getEntity().getStatus() == TodoStatus.CREATED ||
+        Assert.isTrue((todoEvent.getEntity().getStatus() == TodoStatus.ACTIVE ||
                         todoEvent.getEntity().getStatus() == null), "Todo is in an invalid state");
         Todo todo = todoEvent.getEntity();
-        todo.setStatus(TodoStatus.CREATED);
+        todo.setStatus(TodoStatus.ACTIVE);
         return todo;
     }
 }

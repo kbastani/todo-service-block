@@ -1,4 +1,9 @@
 spring:
   application:
     name: todo-ui
+  profiles:
+    active: development
+management:
+  security:
+    enabled: false
 ---

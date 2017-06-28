@@ -12,7 +12,7 @@ import java.util.List;
 public class Todo extends AbstractEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Enumerated(value = EnumType.STRING)
@@ -21,11 +21,11 @@ public class Todo extends AbstractEntity {
     private String title;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<TodoEvent> events = new ArrayList<>();
 
     public Todo() {
-        status = TodoStatus.CREATED;
+        status = TodoStatus.ACTIVE;
     }
 
     public Todo(String title) {

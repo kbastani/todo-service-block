@@ -1,4 +1,7 @@
 spring:
   application:
     name: todo-core
+management:
+  security:
+    enabled: false
 ---

@@ -27,7 +27,7 @@ angular.module('todomvc')
 		var store = {
 			todos: [],
 
-			api: $resource('/api/todos/:id', null,
+			api: $resource('/api/v1/todos/:todoId', null,
 				{
 					update: { method:'PUT' }
 				}
@@ -37,7 +37,7 @@ angular.module('todomvc')
 				var originalTodos = store.todos.slice(0);
 
 				var incompleteTodos = store.todos.filter(function (todo) {
-					return !todo.completed;
+					return todo.status == "ACTIVE";
 				});
 
 				angular.copy(incompleteTodos, store.todos);
@@ -52,7 +52,7 @@ angular.module('todomvc')
 				var originalTodos = store.todos.slice(0);
 
 				store.todos.splice(store.todos.indexOf(todo), 1);
-				return store.api.delete({ id: todo.id },
+				return store.api.delete({ todoId: todo.todoId },
 					function () {
 					}, function error() {
 						angular.copy(originalTodos, store.todos);
@@ -70,7 +70,7 @@ angular.module('todomvc')
 
 				return store.api.save(todo,
 					function success(resp) {
-						todo.id = resp.id;
+						todo.todoId = resp.todoId;
 						store.todos.push(todo);
 					}, function error() {
 						angular.copy(originalTodos, store.todos);
@@ -79,7 +79,7 @@ angular.module('todomvc')
 			},
 
 			put: function (todo) {
-				return store.api.update({ id: todo.id }, todo)
+				return store.api.update({ todoId: todo.todoId }, todo)
 					.$promise;
 			}
 		};
@@ -107,7 +107,7 @@ angular.module('todomvc')
 				var deferred = $q.defer();
 
 				var incompleteTodos = store.todos.filter(function (todo) {
-					return !todo.completed;
+					return todo.status == "ACTIVE";
 				});
 
 				angular.copy(incompleteTodos, store.todos);
