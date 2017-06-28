@@ -1,8 +1,9 @@
 spring:
   application:
     name: todo-ui
-  profiles:
-    active: development
+  cloud:
+    config:
+      uri: ${vcap.services.config-server.credentials.uri:http://localhost:8888}
 management:
   security:
     enabled: false

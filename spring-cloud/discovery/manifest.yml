@@ -1,0 +1,9 @@
+name: discovery-service
+memory: 1024M
+instances: 1
+path: ./target/eureka.jar
+disk_quota: 1024M
+host: todo-discovery-service
+services:
+ - config-server
+ - discovery-service

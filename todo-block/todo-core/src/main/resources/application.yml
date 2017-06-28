@@ -1,6 +1,3 @@
-spring:
-  profiles:
-    active: development
 server:
   port: 3333
 ---
@@ -51,9 +48,13 @@ spring:
   profiles: cloud
   datasource:
     platform: org.hibernate.dialect.MariaDBDialect
+    initialize: true
   data:
     mongodb:
       uri: ${vcap.services.todo-mongo.credentials.uri}
+  jpa:
+    hibernate:
+      ddl-auto: create
 amazon:
   aws:
     access-key-id: ${AMAZON_AWS_ACCESS_KEY_ID:replace}

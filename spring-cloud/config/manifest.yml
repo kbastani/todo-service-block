@@ -1,0 +1,6 @@
+name: config-server
+memory: 1024M
+instances: 1
+path: ./target/configserver.jar
+disk_quota: 1024M
+host: todo-config-server

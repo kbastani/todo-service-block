@@ -9,6 +9,8 @@
 
 .pipeline-config.yml
 
+config/target
+
 target/
 
 node_modules/

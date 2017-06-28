@@ -1,6 +1,9 @@
 spring:
   application:
     name: todo-core
+  cloud:
+    config:
+      uri: ${vcap.services.config-server.credentials.uri:http://localhost:8888}
 management:
   security:
     enabled: false
