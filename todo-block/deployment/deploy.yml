@@ -1,0 +1,83 @@
+
+---
+resources:
+- title: service-core
+  type: git
+  source:
+    uri: https://github.com/kbastani/project-service-block
+    branch: master
+    paths:
+    - ./project-block/project-core
+- title: metrics-function
+  type: git
+  source:
+    uri: https://github.com/kbastani/project-service-block
+    branch: master
+    paths:
+    - ./project-block/functions/metrics-function
+jobs:
+- title: project-block
+  max_in_flight: 1
+  plan:
+  - get: service-core
+    trigger: true
+  - task: build
+    file: service-core/project-block/deployment/tasks/build-core.yml
+  - task: deployment
+    file: service-core/project-block/deployment/tasks/deploy-core.yml
+    params:
+      path: artifact/project-core.jar
+      current_app_name: project-core
+      host: project-core
+      domain: cfapps.io
+      manifest: service-core/project-block/project-core/manifest.yml
+      api: {{pws-api}}
+      username: {{pws-username}}
+      password: {{pws-password}}
+      organization: {{pws-org}}
+      aws_access_key_id: {{aws-access-key-id}}
+      aws_access_key_secret: {{aws-access-key-secret}}
+      space: {{pws-space}}
+- title: metrics-function
+  max_in_flight: 1
+  plan:
+  - get: metrics-function
+    trigger: true
+  - task: prepare
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: busybox}
+      inputs:
+        - title: metrics-function
+      outputs:
+        - title: functions
+        - title: scripts
+      run:
+        path: sh
+        args:
+        - -exc
+        - |
+          cp -r metrics-function/project-block/functions/* functions \
+          && cp -r metrics-function/project-block/deployment/scripts/* scripts
+  - task: package
+    file: metrics-function/project-block/deployment/tasks/build-java-function.yml
+    params:
+      function_name: metrics-function
+  - task: deploy
+    file: metrics-function/project-block/deployment/tasks/deploy-function.yml
+    params:
+      function_name: metrics-function
+      app_binding: project-core
+      aws_default_region: {{aws-region}}
+      aws_access_key_id: {{aws-access-key-id}}
+      aws_secret_access_key: {{aws-access-key-secret}}
+      bucket_name: {{s3-bucket}}
+      service_instance: {{pws-mysql-service}}
+      service_key: {{pws-mysql-service-key}}
+      api: {{pws-api}}
+      username: {{pws-username}}
+      password: {{pws-password}}
+      organization: {{pws-org}}
+      space: {{pws-space}}
