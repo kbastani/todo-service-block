@@ -6,7 +6,7 @@ image_resource:
     repository: governmentpaas/cf-cli
     tag: latest
 inputs:
-- title: function-package
+- name: function-package
 run:
   path: sh
   args:

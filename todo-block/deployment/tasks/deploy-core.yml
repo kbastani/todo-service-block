@@ -6,8 +6,8 @@ image_resource:
     repository: concourse/cf-resource
     tag: latest
 inputs:
-- title: artifact
-- title: service-core
+- name: artifact
+- name: service-core
 run:
   path: sh
   args:

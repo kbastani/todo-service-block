@@ -6,10 +6,10 @@ image_resource:
     repository: maven
     tag: alpine
 inputs:
-- title: functions
-- title: scripts
+- name: functions
+- name: scripts
 outputs:
-- title: function-package
+- name: function-package
 run:
   path: sh
   args:

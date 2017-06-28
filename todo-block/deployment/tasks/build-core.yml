@@ -6,9 +6,9 @@ image_resource:
     repository: maven
     tag: alpine
 inputs:
-- title: service-core
+- name: service-core
 outputs:
-- title: artifact
+- name: artifact
 run:
   path: sh
   args:
