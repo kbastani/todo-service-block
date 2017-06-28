@@ -47,7 +47,7 @@ jobs:
         - |
           cd todo-ui/todo-ui \
           && mvn clean package \
-          && mv target/todo-ui*.jar ../artifact/todo-ui.jar
+          && mv target/todo-ui*.jar ../../artifact/todo-ui.jar
   - task: deployment
     config:
       platform: linux
