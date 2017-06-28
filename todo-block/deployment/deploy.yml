@@ -1,36 +1,36 @@
 
 ---
 resources:
-- title: service-core
+- name: service-core
   type: git
   source:
-    uri: https://github.com/kbastani/project-service-block
+    uri: https://github.com/kbastani/todo-service-block
     branch: master
     paths:
-    - ./project-block/project-core
-- title: metrics-function
+    - ./todo-block/todo-core
+- name: metrics-function
   type: git
   source:
-    uri: https://github.com/kbastani/project-service-block
+    uri: https://github.com/kbastani/todo-service-block
     branch: master
     paths:
-    - ./project-block/functions/metrics-function
+    - ./todo-block/todo-functions/metrics-function
 jobs:
-- title: project-block
+- name: todo-block
   max_in_flight: 1
   plan:
   - get: service-core
     trigger: true
   - task: build
-    file: service-core/project-block/deployment/tasks/build-core.yml
+    file: service-core/todo-block/deployment/tasks/build-core.yml
   - task: deployment
-    file: service-core/project-block/deployment/tasks/deploy-core.yml
+    file: service-core/todo-block/deployment/tasks/deploy-core.yml
     params:
-      path: artifact/project-core.jar
-      current_app_name: project-core
-      host: project-core
+      path: artifact/todo-core.jar
+      current_app_name: todo-core
+      host: todo-core
       domain: cfapps.io
-      manifest: service-core/project-block/project-core/manifest.yml
+      manifest: service-core/todo-block/todo-core/manifest.yml
       api: {{pws-api}}
       username: {{pws-username}}
       password: {{pws-password}}
@@ -38,7 +38,7 @@ jobs:
       aws_access_key_id: {{aws-access-key-id}}
       aws_access_key_secret: {{aws-access-key-secret}}
       space: {{pws-space}}
-- title: metrics-function
+- name: metrics-function
   max_in_flight: 1
   plan:
   - get: metrics-function
@@ -50,26 +50,26 @@ jobs:
         type: docker-image
         source: {repository: busybox}
       inputs:
-        - title: metrics-function
+        - name: metrics-function
       outputs:
-        - title: functions
-        - title: scripts
+        - name: functions
+        - name: scripts
       run:
         path: sh
         args:
         - -exc
         - |
-          cp -r metrics-function/project-block/functions/* functions \
-          && cp -r metrics-function/project-block/deployment/scripts/* scripts
+          cp -r metrics-function/todo-block/todo-functions/* functions \
+          && cp -r metrics-function/todo-block/deployment/scripts/* scripts
   - task: package
-    file: metrics-function/project-block/deployment/tasks/build-java-function.yml
+    file: metrics-function/todo-block/deployment/tasks/build-java-function.yml
     params:
       function_name: metrics-function
   - task: deploy
-    file: metrics-function/project-block/deployment/tasks/deploy-function.yml
+    file: metrics-function/todo-block/deployment/tasks/deploy-function.yml
     params:
       function_name: metrics-function
-      app_binding: project-core
+      app_binding: todo-core
       aws_default_region: {{aws-region}}
       aws_access_key_id: {{aws-access-key-id}}
       aws_secret_access_key: {{aws-access-key-secret}}

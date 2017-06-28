@@ -1,10 +1,10 @@
-title: github-event-core
+title: todo-core
 memory: 1024M
 instances: 1
-path: ./target/github-event-core-0.0.1-SNAPSHOT.jar
+path: ./target/todo-core-0.0.1-SNAPSHOT.jar
 disk_quota: 1024M
 host: github-event-core
 services:
- - github-core-db
- - github-rabbit
- - todo-lambda-db
+ - todo-mysql
+ - todo-rabbit
+ - todo-mongo
