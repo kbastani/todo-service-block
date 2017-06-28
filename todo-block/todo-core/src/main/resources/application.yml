@@ -44,13 +44,13 @@ eureka:
     registryFetchIntervalSeconds: 5
   instance:
     hostname: ${DOCKER_IP:192.168.99.100}
-    instance-id: ${spring.application.title}:${random.int}
+    instance-id: ${spring.application.name}:${random.int}
     leaseRenewalIntervalInSeconds: 5
 ---
 spring:
   profiles: cloud
   datasource:
-    platform: org.hibernate.dialect.H2Dialect
+    platform: org.hibernate.dialect.MariaDBDialect
   data:
     mongodb:
       uri: ${vcap.services.todo-mongo.credentials.uri}
@@ -63,7 +63,7 @@ eureka:
     hostname: ${vcap.application.uris[0]:localhost}
     nonSecurePort: 80
     metadataMap:
-      instanceId: ${vcap.application.instance_id:${spring.application.title}:${spring.application.instance_id:${server.port}}}
+      instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}
     leaseRenewalIntervalInSeconds: 5
   client:
     region: default

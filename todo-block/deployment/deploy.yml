@@ -14,7 +14,7 @@ resources:
     uri: https://github.com/kbastani/todo-service-block
     branch: master
     paths:
-    - ./todo-block/todo-ui
+    - ./todo-ui
 - name: metrics-function
   type: git
   source:
@@ -33,7 +33,9 @@ jobs:
       platform: linux
       image_resource:
         type: docker-image
-        source: {repository: busybox}
+        source:
+          repository: maven
+          tag: alpine
       inputs:
         - name: todo-ui
       outputs:
@@ -42,10 +44,10 @@ jobs:
         path: sh
         args:
         - -exc
-          - |
-            cd todo-ui \
-            && mvn clean package \
-            && mv todo-ui/target/todo-ui*.jar ../artifact/todo-ui.jar
+        - |
+          cd todo-ui/todo-ui \
+          && mvn clean package \
+          && mv target/todo-ui*.jar ../artifact/todo-ui.jar
   - task: deployment
     config:
       platform: linux
