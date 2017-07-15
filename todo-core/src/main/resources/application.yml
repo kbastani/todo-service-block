@@ -54,6 +54,8 @@ spring:
 eureka:
   client:
     enabled: false
+  instance:
+    appname: "core"
 ---
 spring:
   profiles: docker

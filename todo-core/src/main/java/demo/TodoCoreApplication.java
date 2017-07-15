@@ -16,6 +16,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
 import org.springframework.http.MediaType;
@@ -54,6 +55,7 @@ public class TodoCoreApplication {
     @Service
     @Configuration
     @EnableBinding(MetricsSink.class)
+    @Profile({"dev", "cloud"})
     class MetricProcessor {
 
         private final Logger log = Logger.getLogger(this.getClass());
