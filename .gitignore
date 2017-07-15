@@ -9,8 +9,8 @@
 
 .pipeline-config.yml
 
-config/target
-configserver/config
+configserver/target
+cloud-services/configserver/config/
 
 target/
 
