@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        metricsChannel:
+          destination: metrics
+        input:
+          destination: metrics
+          group: metrics-group
+          consumer:
+            durableSubscription: true

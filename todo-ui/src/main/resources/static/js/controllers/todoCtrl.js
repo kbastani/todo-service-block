@@ -112,21 +112,17 @@ angular.module('todomvc')
         };
 
         $scope.toggleCompleted = function (todo, completed) {
-            if (angular.isDefined(completed)) {
-                todo.status = !todo.status ? "COMPLETED" : "ACTIVE";
+            if (typeof todo.status === 'boolean') {
+                todo.status = todo.status ? "COMPLETED" : "ACTIVE";
             } else {
-                if (typeof todo.status === 'boolean') {
-                    todo.status = !todo.status ? "COMPLETED" : "ACTIVE";
-                } else {
-                    todo.status = (todo.status == "COMPLETED") ? "ACTIVE" : "COMPLETED"
-                }
+                todo.status = (todo.status == "COMPLETED") ? "ACTIVE" : "COMPLETED"
             }
 
-            store.put(todo, todos.indexOf(todo))
-                .then(function success() {
-                    todo.completed = todo.status == "COMPLETED";
+            store.command(todo, todos.indexOf(todo))
+                .then(function success(event) {
+                    store.get();
                 }, function error() {
-                    todo.status = (todo.status == "COMPLETED") ? "ACTIVE" : "COMPLETED";
+                    store.get();
                 });
         };
 

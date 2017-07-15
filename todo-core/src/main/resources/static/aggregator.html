@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aggregator</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+            crossorigin="anonymous"></script>
+    <style>
+        .title {
+            float: left;
+            padding-right: 2em;
+        }
+    </style>
+</head>
+<body>
+
+<div id="metrics-table">
+</div>
+
+<script type="text/javascript">
+    new EventSource('v1/apps/todo-core/metrics').onmessage = event => {
+        const msg = JSON.parse(event.data);
+        console.log(msg);
+
+        var key = msg.metricEvent.name.replaceAll("\\.", "-");
+        // Update table
+        var metricCell = $("." + key)
+
+        console.log(key);
+
+        if(metricCell.length == 0) {
+            // Create a new cell
+            $("#metrics-table").append($("<div class='" + key + "'><div class='title'>" + msg.metricEvent.name + ":</div><div class='metric-val'>" + msg.metricEvent.value + "</div></div>"))
+        } else {
+            $("." + key).find(".metric-val").html(msg.metricEvent.value);
+        }
+    }
+
+    String.prototype.replaceAll = function(search, replacement) {
+        var target = this;
+        return target.replace(new RegExp(search, 'g'), replacement);
+    };
+</script>
+</body>
+</html>

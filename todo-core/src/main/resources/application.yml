@@ -1,0 +1,96 @@
+server:
+  port: 3333
+spring:
+  profiles:
+    active: development
+version: 1.0.0-SNAPSHOT
+---
+spring:
+  profiles: development
+  datasource:
+    platform: org.hibernate.dialect.H2Dialect
+  cloud:
+    stream:
+      bindings:
+        metricsChannel:
+          destination: metrics
+        metrics:
+          destination: metrics
+          group: metrics-group
+          consumer:
+            durableSubscription: true
+        input:
+          destination: todo
+          group: todo-group
+          contentType: 'application/json'
+          consumer:
+            durableSubscription: true
+            concurrency: 10
+        output:
+          destination: todo
+          contentType: 'application/json'
+  data:
+    mongodb:
+      database: dev
+      host: localhost
+      port: 27017
+ribbon:
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
+eureka:
+  instance:
+    hostname: localhost
+    metadataMap:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    leaseRenewalIntervalInSeconds: 5
+    health-check-url-path: /application/health
+    status-page-url-path: /application/info
+  client:
+    region: default
+    registryFetchIntervalSeconds: 5
+---
+spring:
+  profiles: test
+eureka:
+  client:
+    enabled: false
+---
+spring:
+  profiles: docker
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${DOCKER_IP:192.168.99.100}:8761/eureka
+    registryFetchIntervalSeconds: 5
+  instance:
+    hostname: ${DOCKER_IP:192.168.99.100}
+    instance-id: ${spring.application.name}:${random.int}
+    leaseRenewalIntervalInSeconds: 5
+---
+spring:
+  profiles: cloud
+  datasource:
+    platform: org.hibernate.dialect.MariaDBDialect
+    initialize: true
+  data:
+    mongodb:
+      uri: ${vcap.services.todo-mongo.credentials.uri}
+  jpa:
+    hibernate:
+      ddl-auto: create
+amazon:
+  aws:
+    access-key-id: ${AMAZON_AWS_ACCESS_KEY_ID:replace}
+    access-key-secret: ${AMAZON_AWS_ACCESS_KEY_SECRET:replace}
+eureka:
+  instance:
+    hostname: ${vcap.application.uris[0]:localhost}
+    nonSecurePort: 80
+    metadataMap:
+      instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${random.value}}}
+    leaseRenewalIntervalInSeconds: 5
+  client:
+    region: default
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: ${vcap.services.discovery-service.credentials.uri:http://localhost:8761}/eureka/

@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: function
+  application:
+    name: "metrics-function"
+eureka:
+  client:
+    enabled: false
+---
+spring:
+  profiles: development
+  data:
+    mongodb:
+      database: dev
+server:
+  port: 0
+eureka:
+  client:
+    enabled: true
