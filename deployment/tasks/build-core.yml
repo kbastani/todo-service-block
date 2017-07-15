@@ -16,4 +16,4 @@ run:
   - |
     cd service-core \
     && mvn clean package -DskipDockerBuild \
-    && mv todo-block/todo-core/target/todo-core*.jar ../artifact/todo-core.jar
+    && mv todo-core/target/todo-core*.jar ../artifact/todo-core.jar
