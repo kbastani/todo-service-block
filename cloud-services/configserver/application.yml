@@ -11,9 +11,21 @@ spring:
       server:
         git:
           uri: https://github.com/kbastani/todo-service-config
-          basedir: target/config
+          basedir: ./config
 server:
   port: 8888
+management:
+  security:
+    enabled: false
+---
+spring:
+  profiles: cloud
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/kbastani/todo-service-config
+          basedir: target/config
 management:
   security:
     enabled: false

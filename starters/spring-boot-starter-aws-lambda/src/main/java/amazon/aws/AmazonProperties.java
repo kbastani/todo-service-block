@@ -13,77 +13,124 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "amazon")
 public class AmazonProperties {
 
-    @NestedConfigurationProperty
-    private Aws aws;
+	@NestedConfigurationProperty
+	private Aws aws;
 
-    /**
-     * A property group for Amazon Web Service (AWS) configurations
-     *
-     * @return a property group for AWS configurations
-     */
-    public Aws getAws() {
-        return aws;
-    }
+	@NestedConfigurationProperty
+	private Functions functions;
 
-    /**
-     * A property group for Amazon Web Service (AWS) configurations
-     *
-     * @param aws is a property group for AWS configurations
-     */
-    public void setAws(Aws aws) {
-        this.aws = aws;
-    }
+	/**
+	 * A property group for Amazon Web Service (AWS) configurations
+	 *
+	 * @return a property group for AWS configurations
+	 */
+	public Aws getAws() {
+		return aws;
+	}
 
-    /**
-     * A property group for Amazon Web Service (AWS) configurations
-     */
-    public static class Aws {
+	/**
+	 * A property group for Amazon Web Service (AWS) configurations
+	 *
+	 * @param aws is a property group for AWS configurations
+	 */
+	public void setAws(Aws aws) {
+		this.aws = aws;
+	}
 
-        private String accessKeyId;
-        private String accessKeySecret;
+	/**
+	 * A property group for configuring AWS Lambda invocations
+	 *
+	 * @return a property group for configuring AWS Lambda invocations
+	 */
+	public Functions getFunctions() {
+		return functions;
+	}
 
-        /**
-         * A valid AWS account's access key id.
-         *
-         * @return an AWS access key id
-         */
-        public String getAccessKeyId() {
-            return accessKeyId;
-        }
+	/**
+	 * A property group for configuring AWS Lambda invocations
+	 *
+	 * @param functions is a property group for configuring AWS Lambda invocations
+	 */
+	public void setFunctions(Functions functions) {
+		this.functions = functions;
+	}
 
-        /**
-         * A valid AWS account's access key id.
-         *
-         * @param accessKeyId is a valid AWS account's access key id.
-         */
-        public void setAccessKeyId(String accessKeyId) {
-            this.accessKeyId = accessKeyId;
-        }
+	/**
+	 * A property group for enabling/disabling AWS functions
+	 */
+	public static class Functions {
 
-        /**
-         * A valid AWS account's secret access token.
-         *
-         * @return an AWS account's secret access key
-         */
-        public String getAccessKeySecret() {
-            return accessKeySecret;
-        }
+		private Boolean enabled = true;
 
-        /**
-         * A valid AWS account's secret access token.
-         *
-         * @param accessKeySecret is a valid AWS account's secret access token.
-         */
-        public void setAccessKeySecret(String accessKeySecret) {
-            this.accessKeySecret = accessKeySecret;
-        }
+		/**
+		 * Enables AWS Lambda function invocation. default: true
+		 *
+		 * @return a {@link Boolean} indicating whether or not to auto configure an AWS function invoker
+		 */
+		public Boolean getEnabled() {
+			return enabled;
+		}
 
-        @Override
-        public String toString() {
-            return "Aws{" +
-                    "accessKeyId='" + accessKeyId + '\'' +
-                    ", accessKeySecret='" + accessKeySecret + '\'' +
-                    '}';
-        }
-    }
+		/**
+		 * If enabled, a function invoker for AWS Lambda will be auto-configured
+		 *
+		 * @param enabled indicating whether or not to auto configure an AWS function invoker. default: true
+		 */
+		public void setEnabled(Boolean enabled) {
+			this.enabled = enabled;
+		}
+	}
+
+	/**
+	 * A property group for Amazon Web Service (AWS) configurations
+	 */
+	public static class Aws {
+
+		private String accessKeyId;
+		private String accessKeySecret;
+
+		/**
+		 * A valid AWS account's access key id.
+		 *
+		 * @return an AWS access key id
+		 */
+		public String getAccessKeyId() {
+			return accessKeyId;
+		}
+
+		/**
+		 * A valid AWS account's access key id.
+		 *
+		 * @param accessKeyId is a valid AWS account's access key id.
+		 */
+		public void setAccessKeyId(String accessKeyId) {
+			this.accessKeyId = accessKeyId;
+		}
+
+		/**
+		 * A valid AWS account's secret access token.
+		 *
+		 * @return an AWS account's secret access key
+		 */
+		public String getAccessKeySecret() {
+			return accessKeySecret;
+		}
+
+		/**
+		 * A valid AWS account's secret access token.
+		 *
+		 * @param accessKeySecret is a valid AWS account's secret access token.
+		 */
+		public void setAccessKeySecret(String accessKeySecret) {
+			this.accessKeySecret = accessKeySecret;
+		}
+
+		@Override
+		public String toString() {
+			return "Aws{" +
+				"accessKeyId='" + accessKeyId + '\'' +
+				", accessKeySecret='" + accessKeySecret + '\'' +
+				'}';
+		}
+	}
 }

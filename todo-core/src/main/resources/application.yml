@@ -1,10 +1,6 @@
+---
 server:
   port: 3333
-spring:
-  profiles:
-    active: development
-version: 1.0.0-SNAPSHOT
----
 spring:
   profiles: development
   datasource:
@@ -31,9 +27,8 @@ spring:
           contentType: 'application/json'
   data:
     mongodb:
+      uri: "mongodb://localhost:27017"
       database: dev
-      host: localhost
-      port: 27017
 ribbon:
   ReadTimeout: 30000
   ConnectTimeout: 30000
@@ -48,14 +43,23 @@ eureka:
   client:
     region: default
     registryFetchIntervalSeconds: 5
+amazon:
+  functions:
+    enabled: false
 ---
 spring:
   profiles: test
+  cloud:
+    config:
+      enabled: false
 eureka:
   client:
     enabled: false
   instance:
     appname: "core"
+amazon:
+  functions:
+    enabled: false
 ---
 spring:
   profiles: docker
@@ -78,6 +82,9 @@ spring:
     mongodb:
       uri: ${vcap.services.todo-mongo.credentials.uri}
   jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: create
 amazon:

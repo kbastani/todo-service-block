@@ -1,10 +1,31 @@
 spring:
   application:
     name: todo-core
+management:
+  security:
+    enabled: false
+version: 1.0.0-SNAPSHOT
+---
+spring:
+  profiles: development
   cloud:
     config:
-      uri: ${vcap.services.config-server.credentials.uri:http://localhost:8888}
+      enabled: false
 management:
   security:
     enabled: false
 ---
+spring:
+  cloud:
+    config:
+      enabled: false
+  profiles: test
+amazon:
+  functions:
+    enabled: false
+---
+spring:
+  cloud:
+    config:
+      uri: ${vcap.services.config-server.credentials.uri:http://localhost:8888}
+  profiles: cloud

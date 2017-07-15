@@ -1,22 +1,30 @@
 package demo;
 
-import demo.function.FunctionService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.util.EnvironmentTestUtils;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Configuration;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@ActiveProfiles("test")
 public class TodoCoreTests {
 
-    @MockBean
-    private FunctionService functionService;
+    private AnnotationConfigApplicationContext context;
 
     @Test
     public void contextLoads() {
+        load(EmptyConfiguration.class, "amazon.aws.functions.enabled=false");
     }
+
+    @Configuration
+    static class EmptyConfiguration {
+    }
+
+    private void load(Class<?> config, String... environment) {
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+        EnvironmentTestUtils.addEnvironment(applicationContext, environment);
+        applicationContext.register(config);
+        applicationContext.refresh();
+        this.context = applicationContext;
+    }
+
 }
+

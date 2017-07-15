@@ -30,15 +30,19 @@
 
         console.log(key);
 
-        if(metricCell.length == 0) {
+        if (metricCell.length == 0) {
             // Create a new cell
-            $("#metrics-table").append($("<div class='" + key + "'><div class='title'>" + msg.metricEvent.name + ":</div><div class='metric-val'>" + msg.metricEvent.value + "</div></div>"))
+            $("#metrics-table").append($("<div class='" + key + "'><div class='title'>" + msg.metricEvent.name + ":</div><input type='hidden' value='" + msg.metricEvent.value + "'/><div class='metric-val'>" + msg.metricEvent.value + "</div></div>"))
         } else {
-            $("." + key).find(".metric-val").html(msg.metricEvent.value);
+            var metricSelector = $("." + key);
+            var metricInput = metricSelector.find("input");
+            var metricVal = eval(metricInput.val()) + msg.metricEvent.value;
+            metricInput.val(metricVal);
+            metricSelector.find(".metric-val").html(metricVal);
         }
     }
 
-    String.prototype.replaceAll = function(search, replacement) {
+    String.prototype.replaceAll = function (search, replacement) {
         var target = this;
         return target.replace(new RegExp(search, 'g'), replacement);
     };

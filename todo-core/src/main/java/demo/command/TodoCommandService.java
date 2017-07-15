@@ -1,5 +1,6 @@
 package demo.command;
 
+import amazon.aws.FunctionInvoker;
 import demo.event.MetricEvent;
 import demo.function.FunctionService;
 import demo.todo.Todo;
@@ -15,50 +16,51 @@ import java.util.HashMap;
 @Service
 public class TodoCommandService {
 
-    private final FunctionService functionService;
-    private final TodoService todoService;
+	private final FunctionInvoker functionInvoker;
+	private final TodoService todoService;
 
-    public TodoCommandService(FunctionService functionService, TodoService todoService) {
-        this.functionService = functionService;
-        this.todoService = todoService;
-    }
+	public TodoCommandService(FunctionInvoker functionInvoker, TodoService todoService) {
+		this.functionInvoker = functionInvoker;
+		this.todoService = todoService;
+	}
 
-    @Transactional
-    public TodoEvent applyCommand(TodoCommandType commandType, Todo todo) {
-        TodoEvent todoEvent = null;
+	@Transactional
+	public TodoEvent applyCommand(TodoCommandType commandType, Todo todo) {
+		TodoEvent todoEvent = null;
 
-        if(todo != null && todo.getIdentity() != null)
-            todo = todoService.getTodo(todo.getIdentity());
+		if (todo != null && todo.getIdentity() != null)
+			todo = todoService.getTodo(todo.getIdentity());
 
-        Assert.notNull(todo, "A todo for that ID does not exist");
+		Assert.notNull(todo, "A todo for that ID does not exist");
 
-        // Map the event type to the corresponding command handler
-        switch (commandType) {
-            case CREATE:
-                todoEvent = TodoCommands.createTodo(todo);
-                break;
-            case ACTIVATE:
-                todoEvent = TodoCommands.activateTodo(todo);
-                break;
-            case COMPLETE:
-                todoEvent = TodoCommands.completeTodo(todo);
-                break;
-        }
+		// Map the event type to the corresponding command handler
+		switch (commandType) {
+			case CREATE:
+				todoEvent = TodoCommands.createTodo(todo);
+				break;
+			case ACTIVATE:
+				todoEvent = TodoCommands.activateTodo(todo);
+				break;
+			case COMPLETE:
+				todoEvent = TodoCommands.completeTodo(todo);
+				break;
+		}
 
-        Assert.notNull(todoEvent, "The command handler did not generate a todo event");
+		Assert.notNull(todoEvent, "The command handler did not generate a todo event");
 
-        // Apply command event
-        todo = todoService.updateTodo(todo);
+		// Apply command event
+		todo = todoService.updateTodo(todo);
 
-        // Add the event and reset the transient payload
-        todoEvent = todoService.addTodoEvent(todo.getIdentity(), todoEvent);
-        todoEvent.setPayload(new HashMap<>());
-        todoEvent.setEntity(todo);
+		// Add the event and reset the transient payload
+		todoEvent = todoService.addTodoEvent(todo.getIdentity(), todoEvent);
+		todoEvent.setPayload(new HashMap<>());
+		todoEvent.setEntity(todo);
 
-        return todoEvent;
-    }
+		return todoEvent;
+	}
 
-    public MetricView applyMetricEvent(MetricEvent metric) {
-        return functionService.metricsFunction(metric);
-    }
+	public MetricView applyMetricEvent(MetricEvent metric) {
+		return functionInvoker.getFunctionService(FunctionService.class)
+			.metricsFunction(metric);
+	}
 }

@@ -1,7 +1,5 @@
 package demo.config;
 
-import amazon.aws.AWSLambdaConfigurerAdapter;
-import com.amazonaws.services.lambda.AWSLambda;
 import demo.function.FunctionService;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.cloud.config.java.AbstractCloudConfig;
@@ -21,30 +19,6 @@ import javax.sql.DataSource;
 @Configuration
 @Profile({"cloud"})
 public class CloudConfig extends AbstractCloudConfig {
-
-    @Bean
-    public FunctionInvoker lambdaInvoker(AWSLambdaConfigurerAdapter configurerAdapter) {
-        FunctionService functionService = configurerAdapter.getFunctionInstance(FunctionService.class);
-        return new FunctionInvoker(functionService, configurerAdapter.getLambdaClient());
-    }
-
-    public static class FunctionInvoker {
-        FunctionInvoker(FunctionService functionService, AWSLambda awsLambda) {
-            this.functionService = functionService;
-            this.awsLambda = awsLambda;
-        }
-
-        private final FunctionService functionService;
-        private final AWSLambda awsLambda;
-
-        public FunctionService getFunctionService() {
-            return functionService;
-        }
-
-        public AWSLambda getAwsLambda() {
-            return awsLambda;
-        }
-    }
 
     @Bean
     public MongoDbFactory mongoFactory() {

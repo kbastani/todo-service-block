@@ -1,5 +1,6 @@
 package demo.config;
 
+import amazon.aws.FunctionInvoker;
 import demo.function.FunctionService;
 import demo.view.MetricView;
 import org.springframework.boot.CommandLineRunner;
@@ -9,7 +10,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Configures the application for a local development environment. Implements the {@link FunctionService} using
@@ -18,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
  * @author Kenny Bastani
  */
 @Configuration
-@Profile("development")
+@Profile({"development"})
 public class DevConfig {
 
     @Bean
@@ -28,8 +33,8 @@ public class DevConfig {
     }
 
     @Bean
-    public FunctionService discoveryFunctionService(RestTemplate restTemplate) {
-        return new DiscoveryFunctionService(restTemplate);
+    public FunctionInvoker functionInvoker(RestTemplate restTemplate) {
+        return new DiscoveryFunctionInvoker(restTemplate);
     }
 
     @Bean
@@ -43,6 +48,22 @@ public class DevConfig {
 //            CollectionOptions options = new CollectionOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, true);
 //            operations.createCollection("metrics", options);
         };
+    }
+
+    @Component
+    private static class DiscoveryFunctionInvoker implements FunctionInvoker {
+
+        private final Map<String, Object> functionServiceContainer = new HashMap<>();
+
+        public DiscoveryFunctionInvoker(RestTemplate restTemplate) {
+            functionServiceContainer.put(FunctionService.class.getName(),
+                new DiscoveryFunctionService(restTemplate));
+        }
+
+        @Override
+        public <T> T getFunctionService(Class<T> functionService) {
+            return (T) functionServiceContainer.get(functionService.getName());
+        }
     }
 
     private static class DiscoveryFunctionService implements FunctionService {

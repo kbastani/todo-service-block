@@ -55,7 +55,7 @@ public class TodoCoreApplication {
     @Service
     @Configuration
     @EnableBinding(MetricsSink.class)
-    @Profile({"dev", "cloud"})
+    @Profile({"development", "cloud"})
     class MetricProcessor {
 
         private final Logger log = Logger.getLogger(this.getClass());

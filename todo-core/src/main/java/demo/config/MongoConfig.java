@@ -1,6 +1,7 @@
 package demo.config;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,26 +17,20 @@ import java.util.List;
 
 @Configuration
 @EnableMongoAuditing
-@Profile({"dev", "cloud"})
+@Profile({"development", "cloud"})
 public class MongoConfig extends AbstractMongoConfiguration {
 
-	@Value("${spring.data.mongodb.host}")
-	private String host;
-
-	@Value("${spring.data.mongodb.port}")
-	private Integer port;
-
-	@Value("${spring.data.mongodb.database}")
-	private String database;
+	@Value("${spring.data.mongodb.uri}")
+	private String uri;
 
 	@Override
 	public MongoClient mongoClient() {
-		return new MongoClient(host, port);
+		return new MongoClient(new MongoClientURI(uri));
 	}
 
 	@Override
 	protected String getDatabaseName() {
-		return database;
+		return "default";
 	}
 
 	@Bean
