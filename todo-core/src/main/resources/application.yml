@@ -1,11 +1,17 @@
 ---
 server:
   port: 3333
+amazon:
+  aws:
+    access-key-id: ${AMAZON_AWS_ACCESS_KEY_ID:replace}
+    access-key-secret: ${AMAZON_AWS_ACCESS_KEY_SECRET:replace}
 spring:
   profiles: development
   datasource:
     platform: org.hibernate.dialect.H2Dialect
   cloud:
+    function:
+      adapter: discovery_client
     stream:
       bindings:
         metricsChannel:
@@ -43,9 +49,6 @@ eureka:
   client:
     region: default
     registryFetchIntervalSeconds: 5
-amazon:
-  functions:
-    enabled: false
 ---
 spring:
   profiles: test
@@ -87,6 +90,9 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: create
+  cloud:
+    function:
+      adapter: aws_lambda
 amazon:
   aws:
     access-key-id: ${AMAZON_AWS_ACCESS_KEY_ID:replace}

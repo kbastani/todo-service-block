@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring-boot-starter-aws-lambda.version>1.0-SNAPSHOT</spring-boot-starter-aws-lambda.version>
+        <spring-cloud-starter-functions.version>1.0-SNAPSHOT</spring-cloud-starter-functions.version>
         <aws-java-sdk-sts.version>1.11.111</aws-java-sdk-sts.version>
         <json-path.version>2.2.0</json-path.version>
         <spring-cloud.version>Finchley.BUILD-SNAPSHOT</spring-cloud.version>
@@ -100,8 +100,8 @@
         </dependency>
         <dependency>
             <groupId>io.serviceblock</groupId>
-            <artifactId>spring-boot-starter-aws-lambda</artifactId>
-            <version>${spring-boot-starter-aws-lambda.version}</version>
+            <artifactId>spring-cloud-starter-functions</artifactId>
+            <version>${spring-cloud-starter-functions.version}</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>

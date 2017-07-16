@@ -1,4 +1,4 @@
-package amazon.aws;
+package functions.adapters.aws.lambda;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -18,9 +18,9 @@ import java.util.Date;
 public class LambdaCredentialsProvider implements AWSCredentialsProvider {
 
     private Credentials sessionCredentials;
-    private final AmazonProperties amazonProperties;
+    private final AwsProperties amazonProperties;
 
-    public LambdaCredentialsProvider(AmazonProperties amazonProperties) {
+    public LambdaCredentialsProvider(AwsProperties amazonProperties) {
         this.amazonProperties = amazonProperties;
     }
 

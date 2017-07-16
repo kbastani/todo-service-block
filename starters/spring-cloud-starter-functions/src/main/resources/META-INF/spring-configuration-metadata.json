@@ -1,0 +1,14 @@
+{
+  "groups": [
+    {
+      "name": "spring.cloud.function",
+      "type": "functions.adapters.FunctionProperties",
+      "sourceType": "functions.adapters.FunctionProperties"
+    },
+    {
+      "name": "amazon.aws",
+      "type": "functions.adapters.aws.lambda.AwsProperties",
+      "sourceType": "functions.adapters.aws.lambda.AwsProperties"
+    }
+  ]
+}

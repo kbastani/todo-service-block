@@ -1,16 +1,23 @@
-package amazon.aws;
+package functions.adapters.aws.lambda;
 
+import functions.adapters.FunctionInvoker;
+import functions.adapters.discovery.DiscoveryAdapterConfiguration;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.boot.test.util.EnvironmentTestUtils;
+import org.springframework.cloud.client.discovery.composite.CompositeDiscoveryClientAutoConfiguration;
+import org.springframework.cloud.client.discovery.simple.SimpleDiscoveryClientAutoConfiguration;
+import org.springframework.cloud.commons.util.InetUtils;
+import org.springframework.cloud.commons.util.InetUtilsProperties;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertNull;
 
-public class AmazonConfigurationTest {
+public class LambdaConfigurationTests {
 
 	private AnnotationConfigApplicationContext context;
 
@@ -22,11 +29,11 @@ public class AmazonConfigurationTest {
 	}
 
 	@Test
-	public void enabledInvoker() {
+	public void amazonLambdaFunctionInvokerEnabled() {
 		load(EmptyConfiguration.class,
 			"amazon.aws.access-key-id=AJGLDLSXKDFLS",
 			"amazon.aws.access-key-secret=XSDFSDFLKKHASDFJALASDF",
-			"amazon.aws.functions.enabled=true");
+			"spring.cloud.function.adapter=aws_lambda");
 
 		FunctionInvoker actual = null;
 
@@ -39,11 +46,9 @@ public class AmazonConfigurationTest {
 	}
 
 	@Test
-	public void disabledInvoker() {
+	public void amazonLambdaFunctionInvokerDisabled() {
 		load(EmptyConfiguration.class,
-			"amazon.aws.access-key-id=AJGLDLSXKDFLS",
-			"amazon.aws.access-key-secret=XSDFSDFLKKHASDFJALASDF",
-			"amazon.aws.functions.enabled=false");
+			"spring.cloud.function.enabled=false");
 
 		FunctionInvoker actual = null;
 
@@ -64,7 +69,13 @@ public class AmazonConfigurationTest {
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 		EnvironmentTestUtils.addEnvironment(applicationContext, environment);
 		applicationContext.register(config);
-		applicationContext.register(AmazonAutoConfiguration.class);
+		applicationContext.register(InetUtilsProperties.class);
+		applicationContext.register(InetUtils.class);
+		applicationContext.register(LambdaAdapterConfiguration.class);
+		applicationContext.register(DiscoveryAdapterConfiguration.class);
+		applicationContext.register(SimpleDiscoveryClientAutoConfiguration.class);
+		applicationContext.register(CompositeDiscoveryClientAutoConfiguration.class);
+		applicationContext.register(RestTemplate.class);
 		applicationContext.refresh();
 		this.context = applicationContext;
 	}

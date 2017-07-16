@@ -1,20 +1,13 @@
 package demo.config;
 
-import amazon.aws.FunctionInvoker;
 import demo.function.FunctionService;
-import demo.view.MetricView;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.actuate.metrics.Metric;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.mongodb.core.CollectionOptions;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Configures the application for a local development environment. Implements the {@link FunctionService} using
@@ -23,59 +16,20 @@ import java.util.Map;
  * @author Kenny Bastani
  */
 @Configuration
-@Profile({"development"})
+@Profile(value = {"development", "!cloud"})
 public class DevConfig {
 
-    @Bean
-    @LoadBalanced
-    protected RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+	@Bean
+	@ConditionalOnProperty(name = "spring.datasource.initialize", havingValue = "true")
+	protected CommandLineRunner commandLineRunner(MongoOperations operations) {
+		return (args) -> {
+			// Setup the streaming data endpoint
+			if (operations.collectionExists("metrics")) {
+				operations.dropCollection("metrics");
+			}
 
-    @Bean
-    public FunctionInvoker functionInvoker(RestTemplate restTemplate) {
-        return new DiscoveryFunctionInvoker(restTemplate);
-    }
-
-    @Bean
-    CommandLineRunner commandLineRunner(MongoOperations operations) {
-        return (args) -> {
-            // Setup the streaming data endpoint
-//            if (operations.collectionExists("metrics")) {
-//                operations.dropCollection("metrics");
-//            }
-
-//            CollectionOptions options = new CollectionOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, true);
-//            operations.createCollection("metrics", options);
-        };
-    }
-
-    @Component
-    private static class DiscoveryFunctionInvoker implements FunctionInvoker {
-
-        private final Map<String, Object> functionServiceContainer = new HashMap<>();
-
-        public DiscoveryFunctionInvoker(RestTemplate restTemplate) {
-            functionServiceContainer.put(FunctionService.class.getName(),
-                new DiscoveryFunctionService(restTemplate));
-        }
-
-        @Override
-        public <T> T getFunctionService(Class<T> functionService) {
-            return (T) functionServiceContainer.get(functionService.getName());
-        }
-    }
-
-    private static class DiscoveryFunctionService implements FunctionService {
-        private RestTemplate restTemplate;
-
-        public DiscoveryFunctionService(RestTemplate restTemplate) {
-            this.restTemplate = restTemplate;
-        }
-
-        @Override
-        public MetricView metricsFunction(Metric event) {
-            return restTemplate.postForEntity("http://metrics-function/function", event, MetricView.class).getBody();
-        }
-    }
+			CollectionOptions options = new CollectionOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, true);
+			operations.createCollection("metrics", options);
+		};
+	}
 }

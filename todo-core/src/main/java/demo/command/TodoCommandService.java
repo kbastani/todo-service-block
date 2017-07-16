@@ -1,12 +1,12 @@
 package demo.command;
 
-import amazon.aws.FunctionInvoker;
 import demo.event.MetricEvent;
 import demo.function.FunctionService;
 import demo.todo.Todo;
 import demo.todo.TodoService;
 import demo.todo.event.TodoEvent;
 import demo.view.MetricView;
+import functions.adapters.FunctionInvoker;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;

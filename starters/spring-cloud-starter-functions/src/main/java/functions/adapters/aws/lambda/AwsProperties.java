@@ -1,4 +1,4 @@
-package amazon.aws;
+package functions.adapters.aws.lambda;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -11,13 +11,10 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConfigurationProperties(prefix = "amazon")
-public class AmazonProperties {
+public class AwsProperties {
 
 	@NestedConfigurationProperty
 	private Aws aws;
-
-	@NestedConfigurationProperty
-	private Functions functions;
 
 	/**
 	 * A property group for Amazon Web Service (AWS) configurations
@@ -35,50 +32,6 @@ public class AmazonProperties {
 	 */
 	public void setAws(Aws aws) {
 		this.aws = aws;
-	}
-
-	/**
-	 * A property group for configuring AWS Lambda invocations
-	 *
-	 * @return a property group for configuring AWS Lambda invocations
-	 */
-	public Functions getFunctions() {
-		return functions;
-	}
-
-	/**
-	 * A property group for configuring AWS Lambda invocations
-	 *
-	 * @param functions is a property group for configuring AWS Lambda invocations
-	 */
-	public void setFunctions(Functions functions) {
-		this.functions = functions;
-	}
-
-	/**
-	 * A property group for enabling/disabling AWS functions
-	 */
-	public static class Functions {
-
-		private Boolean enabled = true;
-
-		/**
-		 * Enables AWS Lambda function invocation. default: true
-		 *
-		 * @return a {@link Boolean} indicating whether or not to auto configure an AWS function invoker
-		 */
-		public Boolean getEnabled() {
-			return enabled;
-		}
-
-		/**
-		 * If enabled, a function invoker for AWS Lambda will be auto-configured
-		 *
-		 * @param enabled indicating whether or not to auto configure an AWS function invoker. default: true
-		 */
-		public void setEnabled(Boolean enabled) {
-			this.enabled = enabled;
-		}
 	}
 
 	/**

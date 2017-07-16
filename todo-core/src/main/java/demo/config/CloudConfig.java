@@ -17,7 +17,7 @@ import javax.sql.DataSource;
  * @author Kenny Bastani
  */
 @Configuration
-@Profile({"cloud"})
+@Profile(value = {"!development", "cloud"})
 public class CloudConfig extends AbstractCloudConfig {
 
     @Bean
