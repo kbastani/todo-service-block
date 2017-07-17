@@ -1,4 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  functions.adapters.FunctionAdapterConfiguration,\
   functions.adapters.aws.lambda.LambdaAdapterConfiguration,\
   functions.adapters.discovery.DiscoveryAdapterConfiguration

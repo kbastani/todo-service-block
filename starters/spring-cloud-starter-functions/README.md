@@ -24,15 +24,11 @@ The following support is provided.
 In your Spring Boot application, add the starter function dependency to your classpath. For Maven, add the following dependency to your `pom.xml`.
 
 ```xml
-<dependencies>
-    <dependency>
-        <groupId>org.kbastani</groupId>
-        <artifactId>spring-cloud-starter-functions</artifactId>
-        <version>${spring-cloud-starter-functions.version}</version>
-    </dependency>
-    
-    ...
-</dependencies>
+<dependency>
+    <groupId>io.serviceblock</groupId>
+    <artifactId>spring-cloud-starter-functions</artifactId>
+    <version>${spring-cloud-starter-functions.version}</version>
+</dependency>
 ```
 
 Next, configure your AWS credentials in your application properties.
