@@ -2,22 +2,53 @@ package demo.event;
 
 import org.springframework.boot.actuate.metrics.Metric;
 
+import java.util.Date;
+
 /**
  * Serializable wrapper for Spring Boot Actuator {@link Metric} events.
  *
  * @author Kenny Bastani
  */
-public class MetricEvent<T extends Number> extends Metric<T> {
+public class MetricEvent<T extends Number> {
+
+    private String name;
+    private T value;
+    private Date timestamp;
 
     private InstanceDetails instanceDetails;
 
     public MetricEvent() {
-        super("", null);
     }
 
     public MetricEvent(Metric<T> metric, InstanceDetails instanceDetails) {
-        super(metric.getName(), metric.getValue(), metric.getTimestamp());
+        this.name = metric.getName();
+        this.value = metric.getValue();
+        this.timestamp = metric.getTimestamp();
         this.instanceDetails = instanceDetails;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     public InstanceDetails getInstanceDetails() {
@@ -31,7 +62,10 @@ public class MetricEvent<T extends Number> extends Metric<T> {
     @Override
     public String toString() {
         return "MetricEvent{" +
-                "instanceDetails=" + instanceDetails +
-                '}';
+            "name='" + name + '\'' +
+            ", value=" + value +
+            ", timestamp=" + timestamp +
+            ", instanceDetails=" + instanceDetails +
+            '}';
     }
 }

@@ -75,6 +75,7 @@ public class TodoCoreApplication {
 
         @StreamListener(value = MetricsSink.INPUT)
         public void metrics(Metric<Number> metric) {
+            log.info(metric);
             InstanceDetails instanceDetails =
                     new InstanceDetails(instanceConfig.getMetadataMap().get("instanceId"), appId, version);
             eventService.applyMetricEvent(new MetricEvent<>(metric, instanceDetails));

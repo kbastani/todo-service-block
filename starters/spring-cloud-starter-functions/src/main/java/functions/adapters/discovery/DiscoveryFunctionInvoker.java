@@ -5,9 +5,7 @@ import functions.adapters.FunctionInvoker;
 import functions.adapters.FunctionRegistry;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.framework.ProxyFactory;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -56,11 +54,5 @@ public class DiscoveryFunctionInvoker extends FunctionInvoker {
 
 			return result;
 		};
-	}
-
-	static class ServerlessComponentProvider extends ClassPathBeanDefinitionScanner {
-		public ServerlessComponentProvider(BeanDefinitionRegistry registry) {
-			super(registry);
-		}
 	}
 }
