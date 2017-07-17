@@ -10,11 +10,11 @@ import functions.adapters.FunctionRegistry;
 import org.springframework.stereotype.Component;
 
 /**
- * Provides a configurer for invoking remote AWS Lambda functions using {@link LambdaInvokerFactory}.
+ * A {@link FunctionInvoker} for invoking remote AWS Lambda functions using {@link LambdaInvokerFactory}.
  * This component also manages the authenticated session for an IAM user that has provided valid
  * access keys to access AWS resources.
  *
- * @author kbastani
+ * @author Kenny Bastani
  */
 @Component
 public class LambdaFunctionInvoker extends FunctionInvoker {
@@ -24,7 +24,7 @@ public class LambdaFunctionInvoker extends FunctionInvoker {
 	/**
 	 * Create a new instance of the {@link LambdaFunctionInvoker} with the bucket name and access credentials
 	 */
-	public LambdaFunctionInvoker(AwsProperties amazonProperties) {
+	LambdaFunctionInvoker(AwsProperties amazonProperties) {
 		this.amazonProperties = amazonProperties;
 	}
 
@@ -34,17 +34,18 @@ public class LambdaFunctionInvoker extends FunctionInvoker {
 	 * access keys using {@link BasicSessionCredentials} auto-configured from Spring Boot
 	 * configuration properties in {@link AwsProperties}.
 	 *
-	 * @param type
-	 * @param <T>
-	 * @return
+	 * @param registry is a {@link FunctionRegistry} that describes functional service invocations
+	 * @param <T>      is the type of {@link FunctionRegistry} to retrieve
+	 * @return an instance of a {@link FunctionRegistry} that is used to lookup and invoke functions on a
+	 * target platform
 	 */
 	@Override
-	protected <T extends FunctionRegistry> T getRegistryInstance(Class<T> type) {
+	protected <T extends FunctionRegistry> T getRegistryInstance(Class<T> registry) {
 		return LambdaInvokerFactory.builder()
 			.lambdaClient(AWSLambdaClientBuilder.standard()
 				.withRegion(Regions.US_EAST_1)
 				.withCredentials(new LambdaCredentialsProvider(amazonProperties))
 				.build())
-			.build(type);
+			.build(registry);
 	}
 }

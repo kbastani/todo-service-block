@@ -55,14 +55,13 @@ spring:
   cloud:
     config:
       enabled: false
+    function:
+      enabled: false
 eureka:
   client:
     enabled: false
   instance:
     appname: "core"
-amazon:
-  functions:
-    enabled: false
 ---
 spring:
   profiles: docker

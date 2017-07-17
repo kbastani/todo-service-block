@@ -60,7 +60,7 @@ public class TodoCommandService {
 	}
 
 	public MetricView applyMetricEvent(MetricEvent metric) {
-		return functionInvoker.getFunctionService(FunctionService.class)
+		return functionInvoker.getRegistry(FunctionService.class)
 			.metricsFunction(metric);
 	}
 }

@@ -36,7 +36,7 @@
         } else {
             var metricSelector = $("." + key);
             var metricInput = metricSelector.find("input");
-            var metricVal = eval(metricInput.val()) + msg.metricEvent.value;
+            var metricVal = key.includes("counter") ? (eval(metricInput.val()) + msg.metricEvent.value) : msg.metricEvent.value;
             metricInput.val(metricVal);
             metricSelector.find(".metric-val").html(metricVal);
         }

@@ -48,7 +48,7 @@ public class DiscoveryFunctionInvokerTest {
 
 		assertNotNull(actual);
 
-		FunctionService functionService = actual.getFunctionService(FunctionService.class);
+		FunctionService functionService = actual.getRegistry(FunctionService.class);
 
 		MockRestServiceServer server = MockRestServiceServer.bindTo(this.context.getBean(RestTemplate.class))
 			.build();

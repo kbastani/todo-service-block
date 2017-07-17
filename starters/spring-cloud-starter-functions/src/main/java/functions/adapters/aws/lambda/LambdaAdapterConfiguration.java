@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * This class auto-configures a {@link LambdaFunctionInvoker} bean.
+ * Adapter auto-configuration for invoking AWS Lambda functions.
  *
- * @author kbastani
+ * @author Kenny Bastani
  */
 @Configuration
 @ConditionalOnProperty(prefix = "amazon", name = {"aws.access-key-id", "aws.access-key-secret"})
@@ -18,10 +18,21 @@ public class LambdaAdapterConfiguration {
 
 	private AwsProperties amazonProperties;
 
+	/**
+	 * Creates a new {@link LambdaAdapterConfiguration}.
+	 *
+	 * @param amazonProperties is the configuration properties for AWS Lambda
+	 */
 	public LambdaAdapterConfiguration(AwsProperties amazonProperties) {
 		this.amazonProperties = amazonProperties;
 	}
 
+	/**
+	 * Registers a {@link LambdaFunctionInvoker} bean that is used to lookup and invoke functional services
+	 * on AWS Lambda.
+	 *
+	 * @return a new instance of {@link FunctionInvoker}
+	 */
 	@Bean
 	@ConditionalOnProperty(prefix = "spring.cloud.function", name = "adapter", havingValue = "aws_lambda")
 	public FunctionInvoker functionInvoker() {

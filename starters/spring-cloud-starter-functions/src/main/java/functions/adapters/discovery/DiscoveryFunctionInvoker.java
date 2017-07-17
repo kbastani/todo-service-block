@@ -5,26 +5,41 @@ import functions.adapters.FunctionInvoker;
 import functions.adapters.FunctionRegistry;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.framework.ProxyFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * A {@link FunctionInvoker} implementation for using a {@link DiscoveryClient} to lookup and invoke functional
+ * services.
+ *
+ * @author Kenny Bastani
+ */
 @Component
 public class DiscoveryFunctionInvoker extends FunctionInvoker {
 
-	private ApplicationContext applicationContext;
 	private RestTemplate restTemplate;
 
-	public DiscoveryFunctionInvoker(ApplicationContext applicationContext, RestTemplate restTemplate) {
-		this.applicationContext = applicationContext;
+	/**
+	 * Create a {@link DiscoveryFunctionInvoker}.
+	 *
+	 * @param restTemplate is a {@link LoadBalanced} {@link RestTemplate}
+	 */
+	DiscoveryFunctionInvoker(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 	}
 
+	/**
+	 * Gets an instance of a {@link FunctionRegistry} that routes service requests to a discovery service provider.
+	 *
+	 * @param registry is a {@link FunctionRegistry} that describes functional service invocations
+	 * @param <T>      is the type of {@link FunctionRegistry} to retrieve
+	 * @return an instance of a {@link FunctionRegistry} that is used to lookup and invoke functions on a
+	 * target platform
+	 */
 	@Override
-	public void setProperties() {
-	}
-
-	@Override
+	@SuppressWarnings("unchecked")
 	protected <T extends FunctionRegistry> T getRegistryInstance(Class<T> registry) {
 		if (!registryContainer.containsKey(registry.getName())) {
 			registryContainer.put(registry.getName(), ProxyFactory.getProxy(registry, invoke()));
@@ -32,6 +47,13 @@ public class DiscoveryFunctionInvoker extends FunctionInvoker {
 		return (T) registryContainer.get(registry.getName());
 	}
 
+	/**
+	 * Invokes a functional service using the method name described in a {@link LambdaFunction} that annotates
+	 * a method on a {@link FunctionRegistry}. The invocation will make an HTTP POST request to the service instance
+	 * and return the response.
+	 *
+	 * @return a {@link MethodInterceptor} that invokes a service instance
+	 */
 	private MethodInterceptor invoke() {
 		return methodInvocation -> {
 			// Get return type
