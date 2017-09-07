@@ -28,7 +28,7 @@ public class DevConfig {
 				operations.dropCollection("metrics");
 			}
 
-			CollectionOptions options = new CollectionOptions(Integer.MAX_VALUE, Integer.MAX_VALUE, true);
+			CollectionOptions options = CollectionOptions.empty().capped().size(Integer.MAX_VALUE).maxDocuments(Integer.MAX_VALUE);
 			operations.createCollection("metrics", options);
 		};
 	}

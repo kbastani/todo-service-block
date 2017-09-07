@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.0.M1</version>
+        <version>2.0.0.M3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -23,7 +23,7 @@
         <spring-cloud-starter-functions.version>1.0-SNAPSHOT</spring-cloud-starter-functions.version>
         <aws-java-sdk-sts.version>1.11.111</aws-java-sdk-sts.version>
         <json-path.version>2.2.0</json-path.version>
-        <spring-cloud.version>Finchley.BUILD-SNAPSHOT</spring-cloud.version>
+        <spring-cloud.version>Finchley.M2</spring-cloud.version>
         <metrics.version>0.5.1.RELEASE</metrics.version>
         <prom.version>0.0.23</prom.version>
     </properties>
